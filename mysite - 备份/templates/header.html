@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<div class="container">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://www.djangoproject.com/"><img src="/static/images/4.jpg" width="20px"></a>
+	</div>
+	<div>
+	    <ul class="nav navbar-nav" role="navigation">
+           <li><a href="/home">HOME</a></li>
+		   <li><a href="/">blog</a></li>
+           <li><a href="/article/list-article-titles">文章</a></li>
+           <li><a href="/article/article-column">添加文章</a></li>
+           <li><a href="/image/images">图片</a></li>
+           <li><a href="/course/course-list">课程</a></li>
+            <li><a href="/course/manage-course">发表课程</a></li>
+           <li><a href="/course/about">关于本站</a></li>
+        </ul>
+	    <ul class="nav navbar-nav navbar-right" style="margin-right:10px">
+		{% if user.is_authenticated %}
+		<li>
+                    <div class="dropdown" style="margin-top:8px">
+                        <button class='btn btn-default dropdown-toggle' type='button' id='dropdownMenu' data-toggle='dropdown'>{{ user.username }}<span class='caret'></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="/management/password-change">修改密码</a></li>
+                            <li><a href="/management/edit-my-information">个人信息</a></li>
+
+                        </ul>
+                    </div>
+        </li>
+		<li><a href="/management/logout">Logout</a></li>
+		{% else %}
+		<li><a href="/management/login">LOGIN</a></li>
+        <li><a href="/management/register">Sign up</a></li>
+		{% endif %}
+	    </ul>
+	</div>
+    </nav>
+</div>
+<script src="{% static 'js/jquery.js'%}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>

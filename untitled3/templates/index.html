@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>sunjohn</title>
+   <script type="text/javascript" src="/static/jquery-3.2.0.js"></script>
+
+</head>
+<form method="get" action="/auth/">
+ username<input type="text" name="username">
+ password<input type="password" name="password">
+ <input type="submit" value='Login'>
+</form>
+<script>
+  $(function(){
+      $.get('/getregion/',{val:'shandong'},function(regions){
+        var regions=JSON.parse(regions);
+        console.log(regions);
+        $.each(regions.shandong.JiNan,function(key,county){
+            row='<li>'+key+'&nbsp;'+county;
+            $('#region_list').append(row);
+        })
+      });
+  });
+</script>
+<ul id="region_list"></ul>
+</body>
+</html>

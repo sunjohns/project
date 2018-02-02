@@ -1,0 +1,152 @@
+{% extends 'Master.html' %}
+{% block css %}
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css"/>
+{% endblock %}
+{% block content %}
+   <div>
+	<input id='i' type='button' value='添加' onclick='AddItem();' />
+   </div>
+<table style='1'>
+		<tr>
+			<td>用户名</td>
+			<td>密码</td>
+            <td>操作</td>
+
+		</tr>
+    {% for item in model%}
+         <tr>
+             <td class="hide">{{ item.Nid }}</td>
+             <td><a href="/userdetail/{{ item.Nid }}">{{ item.Username }}</a></td>
+             <td>{{ item.Password }}</td>
+             <td><a onclick='EditItem(this);' class="badge">编辑</a>
+				<a onclick='DeleteItem(this);'class="badge">删除</a></td>
+         </tr>
+    {% endfor %}
+</table>
+
+    <ul class="pagination">
+	    <li><a href="#">&laquo;</a></li>
+	    <li><a href="#">1</a></li>
+	    <li><a href="#">2</a></li>
+	    <li><a href="#">3</a></li>
+	    <li><a href="#">4</a></li>
+	    <li><a href="#">5</a></li>
+	    <li><a href="#">&raquo;</a></li>
+  	</ul>
+  	<ul class="pagination">
+  	{{page}}
+  	</ul>
+
+
+   <div  id="shade" class="shade hide"></div>
+   <div id='wpq-modal' class='wpq-modal hide'>
+       <form id="form" method="post" action="/adduser/">
+             <input  type='hidden' id='nid' name='nid' />
+
+       	<p>
+				<label for='user'>用户名：</label>
+			    <input type='text' id='user' name='username' />
+        </p>
+        <p>
+                <label for='passwd'>密码：</label>
+			    <input type='text' id='passwd' name='password' />
+        </p>
+        <p>
+                <input type="submit" value="确定">
+                <input type="button" value="关闭" onclick="CancleShade();">
+        </p>
+       </form>
+   </div>
+
+
+   <div id='wpq-modal-edit' class='wpq-modal hide'>
+       <form id="form1" method="post" action="/edituser/">
+             <input  type='hidden' id='did' name='did' />
+
+       	<p>
+				<label for='user'>用户名：</label>
+			    <input type='text' id='user' name='username' />
+        </p>
+        <p>
+                <label for='passwd'>密码：</label>
+			    <input type='text' id='passwd' name='password' />
+        </p>
+        <p>
+                <input type="submit" value="确定">
+                <input type="button" value="关闭" onclick="CancleShade2();">
+        </p>
+       </form>
+   </div>
+
+
+
+   <div id='wpq-modal-del' class='wpq-modal hide'>
+	<form id='form1' class='form' method='post' action='/deluser/'>
+		<p>
+            <input  type='hidden' id='delnid' name='delnid' />
+			真的不要我了吗？
+        </p>
+		<p>
+			<input type='submit' value='确定'/>
+			<input type='button' value='关闭' onclick='CancleShade1();'/>
+        </p>
+	</form>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block javascript %}
+    <script src="/static/bootstrap/js"/>
+   <script src="/static/js/sunjohn.js"></script>
+   <script>
+       $(function(){
+			$.validate('#form');
+		})
+        function AddItem(){
+			$('#form :text').val(null);
+			$('#wpq-modal,#shade').removeClass('hide');
+		}
+		function CancleShade(){
+			$('#wpq-modal,#shade').addClass('hide');
+		}
+		function CancleShade1(){
+			$('#wpq-modal-del,#shade').addClass('hide');
+		}
+		function CancleShade2(){
+			$('#wpq-modal-edit,#shade').addClass('hide');
+		}
+
+		function DeleteItem(arg){
+			var data = []
+			var others = $(arg).parent().prevAll();
+			$.each(others,function(i,value){
+				data.push($(value).text());
+			})
+			data = data.reverse()
+			$('#delnid').val(data[0])
+			$('#wpq-modal-del,#shade').removeClass('hide');
+		}
+		function EditItem(arg){
+			var data = []
+			var others = $(arg).parent().prevAll();
+			$.each(others,function(i,value){
+				data.push($(value).text());
+			})
+			data = data.reverse()
+            $('#did').val(data[0]);
+			$('#user').val(data[1]);
+			$('#passwd').val(data[2]);
+			$('#wpq-modal-edit,#shade').removeClass('hide');
+		}
+
+
+
+
+
+   </script>
+{% endblock %}
+</body>
+</html>

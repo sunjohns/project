@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title></title>
+	<link rel="stylesheet" href='/static/css/common.css' />
+	{% block css %} {% endblock%}
+</head>
+<body>
+
+	<div class='pg-title'>
+		<ul>
+			<li><a>AutoHome</a></li>
+		</ul>
+	</div>
+	
+	<div class='pg-body'>
+		<div class='body-menu'>
+			<div>
+				<div class="menu-title">Menu1</div>
+				<div class="menu-body">
+					<a href="/userlist/">用户管理</a>
+					<a href="">content2</a>
+					<a href="">content3</a>
+				</div>
+			</div>
+
+			<div>
+				<div class="menu-title">Menu1</div>
+				<div class="menu-body hide">
+					<a href="">content1</a>
+					<a href="">content2</a>
+					<a href="">content3</a>
+				</div>
+			</div>
+
+			<div>
+				<div class="menu-title">Menu1</div>
+				<div class="menu-body hide">
+					<a href="">content1</a>
+					<a href="">content2</a>
+					<a href="">content3</a>
+				</div>
+			</div>
+
+		</div>
+		
+		<div class='body-content'>
+			{% block content %} {% endblock%}
+		</div>
+	</div>
+	
+	<div></div>
+	<script type="text/javascript" src='/static/js/jquery-3.2.0.js'></script>
+	{% block javascript %} {% endblock%}
+	<script type="text/javascript">
+		$(function(){
+			$('.menu-title').click(function(){
+				$(this).parent().siblings().children('.menu-body').addClass('hide');
+				$(this).next().removeClass('hide');
+			});
+		});
+	</script>
+</body>
+</html>

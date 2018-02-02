@@ -1,0 +1,69 @@
+{% extends 'index.html' %}
+
+{% block page-content %}
+
+
+       <ul>
+           <li>welcome to --{{ roomobj.name }}</li>
+           {% for item in membercount %}
+               <li>{{ item.user.username }}</li>
+           {% endfor %}
+       </ul>
+
+
+          <div id="chat" style="border:1px solid black;height:300px;width:300px;overflow: auto"></div>
+          <textarea id="message" height="100px"></textarea>
+          <input type='button' onclick="js_date()" value="提交" />
+
+
+
+{% endblock %}
+{% block java %}
+<script>
+function js_date(){
+        var date_obj = new Date();
+        var time = date_obj.getHours()+':'+date_obj.getMinutes()+':'+date_obj.getSeconds()
+        var msg=$("#message").val()
+        $('#message').val("")
+        var name='{{ user.username }}'
+        var content="<span>"+name+":</span><span>"+time+"</span></br><span>"+msg+"</span></br>"
+        $("#chat").append(content);
+       var height=document.getElementsById("chat").scrollHeight;
+       $("#chat").scrollTop(height);
+       var id={{ user.id }}
+       var roomid={{ roomobj.id }}
+       var data={id:id,msg:msg,time:time,roomid:roomid,name:name}
+       syncrequest('/savemsg/',data,'post',null);
+}
+      setInterval(function(){
+           var roomid={{ roomobj.id }}
+           data={roomid:roomid}
+           syncrequest('/getmsg/',data,'get',updatechatpool)
+      },5000);
+      $('#message').keyup(function(event){
+          if(event.keyCode==13){
+              js_date();
+          }
+      })
+     function updatechatpool(arg){//刷新时候也要设置滑轮在下面
+            var arg=$.parseJSON(arg);
+            $('#chat').empty();
+            $.each(arg,function(k,v){
+             var content="<span>"+v[3]+":"+v[2]+"</span></br><span>"+v[1]+"</span></br>"
+             $('#chat').append(content);
+             var height=document.getElementsById("chat").scrollHeight;
+             $("#chat").scrollTop(height);
+        })
+     }
+
+      function syncrequest(url,data,type,func){
+        $.ajax({
+          url:url,
+          data:data,
+          type:type,
+          success:func
+     })
+}
+
+</script>
+{% endblock %}

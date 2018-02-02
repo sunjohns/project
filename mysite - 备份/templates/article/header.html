@@ -1,0 +1,22 @@
+{% load staticfiles %}
+<div class="container">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://www.djangoproject.com/"><img src="/static/images/4.jpg" width="20px"></a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav" role="tablist">
+                <li><a href="/article/article-column">文章管理</a></li>
+                <li><a href="/image/list-images/">图片管理</a></li>
+                <li><a href="/course/manage-course">课程管理</a></li>
+                <li><a href="/article/list-article-titles">查看文章</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style="margin-right:10px">
+                <li><a href="/">网站首页</a></li>
+                <li><span>{{ user.username }}</span></li>
+                <li><a href="/management/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>

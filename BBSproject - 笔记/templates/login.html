@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">{%extends 'index.html'%}
+
+
+{%   block page-content%}
+<div>
+    <form action='/acc_login/' method='POST'>
+        <input type='text' name='username' />
+        <input type='password' name='password' />
+
+        <input type='submit' value='Login' />
+
+         <span style='color:red'>{{login_err}}</span><!--如果输入错误就会显示该模版语言-->
+    </form>
+</div>
+{%endblock%}

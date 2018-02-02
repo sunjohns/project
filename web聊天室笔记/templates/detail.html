@@ -1,0 +1,77 @@
+{% extends 'index.html' %}
+
+{% block page-content %}
+
+<!--user.id和item.user.id不同，user.id是当前登录用户的id，item是已经登录了，在ChatAccount里的该房间所有的用户的记录的membercount的一个用户记录-->
+       <ul>
+           <li>welcome to --{{ roomobj.name }}</li>
+           {% for item in membercount %}<!--会列出该membercount的所有该房间的记录-->
+               <li>{{ item.user.username }}</li><!--item是一个ChatAccount记录，该记录有user字段，对应外键表User的所有字段，此时我们只要username字段，不要大写没事-->
+           {% endfor %}
+       </ul>
+
+
+          <div id="chat" style="border:1px solid black;height:300px;width:300px;overflow: auto"></div><!--聊天框，你要定义overflow：auto就会有滑动框-->
+          <textarea id="message" height="100px"></textarea><!--发送框-->
+          <input type='button' onclick="js_date()" value="提交" /><!--提交框，会调用js_data函数-->
+<!--发送信息时会有时间，每次发送完msg，并且清空发送框，然后在聊天框append，记住要有var定义，下面那个scrollHeight是定义滑动框在下面-->
+<!--var name='{{ user.username }}'要引号是字符串-->
+{% endblock %}
+{% block java %}
+<script>
+function js_date(){
+        var date_obj = new Date();
+        var time = date_obj.getHours()+':'+date_obj.getMinutes()+':'+date_obj.getSeconds()
+        var msg=$("#message").val()
+        $('#message').val("")
+        var name='{{ user.username }}'
+        var content="<span>"+name+":</span><span>"+time+"</span></br><span>"+msg+"</span></br>"
+        $("#chat").append(content);
+       var height=document.getElementsById("chat").scrollHeight;
+       $("#chat").scrollTop(height);
+       var id={{ user.id }}<!--从detail方法传递的是当前登录用户的id-->
+       var roomid={{ roomobj.id }}<!--从detail方法传递的是当前被选择房间的id-->
+    <!--从前端传入的消息定义成data，有消息的id，和消息内容，发送时间，发送的房间ID，发送的用户名-->
+       var data={id:id,msg:msg,sendtime:sendtime,roomid:roomid,name:name}<!--这些都上面定义的变量-->
+       syncrequest('/savemsg/',data,'post',null);
+}<!--然后发送给ajax-->
+
+
+
+    <!--保存数据后我们要5000毫秒自动刷新-->
+      setInterval(function(){
+           var roomid={{ roomobj.id }}
+           data={roomid:roomid}
+           syncrequest('/getmsg/',data,'get',updatechatpool)
+      },5000);
+
+       <!--我们定义回车键也能调用js_data函数，回车发送-->
+      $('#message').keyup(function(event){
+          if(event.keyCode==13){
+              js_date();
+          }
+      })
+
+     function updatechatpool(arg){//刷新时候也要设置滑轮在下面
+            var arg=$.parseJSON(arg);
+            $('#chat').empty();
+            $.each(arg,function(k,v){
+             var content="<span>"+v[3]+":"+v[2]+"</span></br><span>"+v[1]+"</span></br>"
+             $('#chat').append(content);
+             var height=document.getElementsById("chat").scrollHeight;
+             $("#chat").scrollTop(height);
+        })
+     }<!--刷新的函数，我们刷新时先把从后端getmsg得到保存的数据json成字典格式，然后清空聊天框，然后把得到的列表打印到聊天框-->
+
+<!--定义调用ajax时要传入的参数，第一个是给后台什么方法(post,get)处理，传入的数据，传入的类型，函数-->
+      function syncrequest(url,data,type,func){
+        $.ajax({
+          url:url,
+          data:data,
+          type:type,
+          success:func
+     })
+}
+
+</script>
+{% endblock %}
